@@ -77,7 +77,7 @@ namespace zgrl.Classes
                   error = "The maximum a car stat can be is 7. Armor input was " + result;
                   return false;
                 }
-                Agility = result;
+                Armor = result;
               } else {
                 error = "You didn't provide a valid number for your armor level";
                 return false;
@@ -90,7 +90,7 @@ namespace zgrl.Classes
                   error = "The maximum a car stat can be is 7. Attack input was " + result;
                   return false;
                 }
-                Agility = result;
+                Attack = result;
               } else {
                 error = "You didn't provide a valid number for your attack level";
                 return false;
@@ -103,7 +103,7 @@ namespace zgrl.Classes
                   error = "The maximum a car stat can be is 7. Hull input was " + result;
                   return false;
                 }
-                Agility = result;
+                Hull = result;
               } else {
                 error = "You didn't provide a valid number for your hull level";
                 return false;
@@ -116,7 +116,7 @@ namespace zgrl.Classes
                   error = "The maximum a car stat can be is 7. Speed input was " + result;
                   return false;
                 }
-                Agility = result;
+                Speed = result;
               } else {
                 error = "You didn't provide a valid number for your speed level";
                 return false;
@@ -129,7 +129,7 @@ namespace zgrl.Classes
                   error = "The maximum a car stat can be is 7. Tech input was " + result;
                   return false;
                 }
-                Agility = result;
+                Tech = result;
               } else {
                 error = "You didn't provide a valid number for your tech level";
                 return false;
@@ -139,54 +139,14 @@ namespace zgrl.Classes
         }
       }
       // Logic to verify the car isn't spending more than 16 points on stats
-      int count = 0;
-      for (int i = 1; count <= 16; i++) {
-        bool less = true;
-        if (i <= Agility) {
-            count += i;
-            less = less && false;
-        } else {
-          less = less && true;
-        }
-        if (i <= Armor) {
-            count += i;
-            less = less && false;
-        } else {
-          less = less && true;
-        }
-        if (i <= Attack) {
-            count += i;
-            less = less && false;
-        } else {
-          less = less && true;
-        }
-        if (i <= Hull) {
-            count += i;
-            less = less && false;
-        } else {
-          less = less && true;
-        }
-        if (i <= Speed) {
-            count += i;
-            less = less && false;
-        } else {
-          less = less && true;
-        }
-        if (i <= Tech) {
-            count += i;
-            less = less && false;
-        } else {
-          less = less && true;
-        }
-        if (less) {
-          error = "Your total spend in car attributes is less than the alotted amount of 16.";
-          return false;
-        }
-      }
-      if (count > 16) {
-        error = "Your total spend in car attributes is greater than the alotted amount of 62.";
+      if (Agility + Armor + Attack + Hull + Speed + Tech < 16) {
+        error = "You're spending less than 16 points. Spent: " + (Agility + Armor + Attack + Hull + Speed + Tech);
+        return false;
+      } else if (Agility + Armor + Attack + Hull + Speed + Tech > 16) {
+        error = "You're spending more than 16 points. Spent: " + (Agility + Armor + Attack + Hull + Speed + Tech);
         return false;
       }
+
       error = "";
       return true;
     }

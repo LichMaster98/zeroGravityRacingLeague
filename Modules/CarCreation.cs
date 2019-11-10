@@ -137,8 +137,8 @@ namespace zgrl.Commands
         embed.AddField("ID",car.ID.ToString(),true);
         embed.AddField(
           "Attributes","Agility: " + car.Agility + System.Environment.NewLine + "Armor: " + car.Armor 
-          + System.Environment.NewLine + "Attack: " + car.Attack + System.Environment.NewLine + "Hull"+ car.Hull 
-          + System.Environment.NewLine + "Speed" + car.Speed + System.Environment.NewLine + "Tech" + car.Tech, true
+          + System.Environment.NewLine + "Attack: " + car.Attack + System.Environment.NewLine + "Hull: "+ car.Hull 
+          + System.Environment.NewLine + "Speed: " + car.Speed + System.Environment.NewLine + "Tech: " + car.Tech, true
         );
         if( id < 0 ) {
           embed.AddField("Player",Context.User.Mention,true);

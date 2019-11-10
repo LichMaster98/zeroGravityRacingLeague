@@ -307,25 +307,8 @@ $RECYCLE.BIN/
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
 /.vs
-/emperor3/Properties/PublishProfiles/*
-/emperor3/bin/*
-/emperor3/obj/*
-/packages/*
-/emperor3/bin
-/emperor3/obj/Debug
-/emperor3/obj/Release
-/emperor3/emperor3.csproj.user
-/churchbot/secret.txt
-/churchbot/virtues.txt
-/churchbot/_configuration.json
-/azure_churchbot/secret.txt
-emperor_mvc/data.json
-emperor_mvc/secrets.json
 .vscode/launch.json
 .vscode/tasks.json
-data.json
-participant.json
-swnbot.json
 timebot.json
-player.json
-Timebot-fc612c6f90aa.json
+car.json
+racer.json

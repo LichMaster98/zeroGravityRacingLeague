@@ -72,10 +72,10 @@ namespace zgrl.Classes {
             }
 
             // Logic to check that the skills don't exceed 12 points total (of cost)
-            int count = 0;
+            var count = 0;
 
-            for (int i = 1; count <= 12; i++) {
-                bool less = true;
+            for (int i = 2; count < 12; i++) {
+                var less = true;
                 if (i <= adaptability) {
                     count += i;
                     less = less && false;
@@ -95,13 +95,13 @@ namespace zgrl.Classes {
                     less = less && true;
                 }
                 if (less) {
-                    error = "Your total spend in attributes is less than the alotted amount of 12.";
+                    error = "Your total spend in attributes is less than the alotted amount of 12. Got:" + count;
                     return false;
                 }
             }
 
             if (count > 12) {
-                error = "Your total spend in attributes is greater than the alotted amount of 12.";
+                error = "Your total spend in attributes is greater than the alotted amount of 12. Got: " + count;
                 return false;
             }
             error = "";

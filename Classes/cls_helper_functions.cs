@@ -64,7 +64,7 @@ namespace zgrl.Classes
                     previous_key = values[0];
                 } else {
                     var value = rtrnr[previous_key];
-                    value = " " + input;
+                    value = value + " " + input;
                     rtrnr[previous_key] = value;
                 }
                 
