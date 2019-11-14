@@ -76,30 +76,9 @@ namespace zgrl.Commands
             if ( r == null ) {
                 await ReplyAsync(Context.User.Mention + ", you don't have a current pilot or this pilot doesn't exist in the database.");
                 return;
-            }
+            }            
 
-            var embed = new EmbedBuilder();
-
-            embed.Title = "Pilot Name: " + r.name;
-            embed.WithDescription(r.descr);
-            embed.WithThumbnailUrl(r.img);
-            embed.AddField("ID",r.ID.ToString(),true);
-            embed.AddField("Sponsor",r.faction, true);
-            embed.AddField("Attributes","Adaptability: " + r.adaptability + System.Environment.NewLine + "Intelligence: " + r.intel + System.Environment.NewLine + "Skill: " + r.skill, true);
-            foreach (Classes.Ability ability in r.abilities) {
-                embed.AddField("Ability:" + ability.Title, ability.Description, true);
-            }
-            foreach (Classes.Car car in r.cars) {
-                embed.AddField(car.racerEmbed(), car.description, true);
-            }
-            if( i < 0 ) {
-                embed.AddField("Player",Context.User.Mention,true);
-            } else {
-                var usr = Context.Guild.GetUser(r.player_discord_id);
-                embed.AddField("Player",usr.Mention,true);
-            }
-
-            await Context.Channel.SendMessageAsync("", false, embed.Build(), null);
+            await Context.Channel.SendMessageAsync("", false, r.embed(i, Context), null);
         }
 
         [Command("updateability")]
@@ -130,20 +109,9 @@ namespace zgrl.Commands
             var str = new List<string>();
             str.Add("**Special Abilities**");
             foreach(Ability ability in abilities) {
-                str.Add("**#" + ability.ID + ":** " + ability.Title + " - *" +ability.Description + "*");
+                str.Add(ability.ToString());
             }
             helpers.output(Context.User, str);
-        }
-
-        [Command("showcards")]
-        public async Task showCardsAsync() {
-            var cards = Card.get_card("card.json");
-            var str = new List<string>();
-            str.Add("**Card List**");
-            foreach (Classes.Card card in cards) {
-                str.Add("**" + card.title + "** - " + card.cardTypeString() + " - " + card.description);
-            }
-            helpers.output(Context.User,str);
         }
 
         [Command("listpilots")]

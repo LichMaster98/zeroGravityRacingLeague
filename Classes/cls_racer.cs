@@ -1,18 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using Discord;
+using Discord.Commands;
 using JsonFlatFileDataStore;
 
 namespace zgrl.Classes {
-
     public class racer {
         public static string[] validKeys = {"name", "sponsor", "desc", "img", "adapt", "skill", "int"};
         public int ID { get; set; }
         public ulong player_discord_id { get; set; }
         public ulong server_discord_id { get ; set; }
-        public string name { get; set; }
-        public string faction { get; set; }
-        public string descr { get; set; }
-        public string img { get; set; }
+        public string name { get; set; } = "";
+        public string faction { get; set; } = "";
+        public string descr { get; set; } = "";
+        public string img { get; set; } = "";
         public bool inGame { get; set; } = false;
         public int adaptability { get; set; } = 1;
         public int skill { get; set; } = 1;
@@ -22,6 +23,31 @@ namespace zgrl.Classes {
 
         //Variables Used for Game Mechanics:
         public List<Card> activeHand { get; set; } = new List<Card>();
+
+        public Embed embed(int i, SocketCommandContext Context) {
+            var embed = new EmbedBuilder();
+
+            embed.Title = "Pilot Name: " + name;
+            embed.WithDescription(descr);
+            embed.WithThumbnailUrl(img);
+            embed.AddField("ID",ID.ToString(),true);
+            embed.AddField("Sponsor",faction, true);
+            embed.AddField("Attributes","Adaptability: " + adaptability + System.Environment.NewLine + "Intelligence: " + intel + System.Environment.NewLine + "Skill: " + skill, true);
+            foreach (Classes.Ability ability in abilities) {
+                embed.AddField("Ability:" + ability.Title, ability.Description, true);
+            }
+            foreach (Classes.Car car in cars) {
+                embed.AddField(car.racerEmbed(), car.description, true);
+            }
+            if( i < 0 ) {
+                embed.AddField("Player",Context.User.Mention,true);
+            } else {
+                var usr = Context.Guild.GetUser(player_discord_id);
+                embed.AddField("Player",usr.Mention,true);
+            }
+
+            return embed.Build();
+        }
 
         public bool update(Dictionary<string, string> inputs, out string error) {
             int result;

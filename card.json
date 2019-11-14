@@ -1,0 +1,17 @@
+{
+  "card": [
+    {
+      "id": 0,
+      "count": 1,
+      "title": "Overdrive",
+      "customtitle": null,
+      "description": "**Requirements:** 2 skill\r\nWhether through maneuvering your opponents, abusing the power output of your engine, or using track limits to your advantage; you attempt to dart past your opponents. Test Speed vs AGI against all cars ahead of you and within 3+Speed units. This action is nullified if it resolves and there are no targets in range or any of them are taking the Block action.",
+      "customLore": null,
+      "img": "",
+      "success": "Your car moves in front of all cars tested against and they cannot progress past you this round.",
+      "failure": "",
+      "cardLegality": 0,
+      "cardType": 0
+    }
+  ]
+}

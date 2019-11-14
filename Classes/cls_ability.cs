@@ -21,6 +21,10 @@ namespace zgrl.Classes
     public partial class Ability
     {
         public static Ability[] FromJson(string json) => JsonConvert.DeserializeObject<Ability[]>(json, Converter.Settings);
+
+        public override string ToString() {
+            return "ID: (" + ID + ") **" + Title + "**: " + Description;
+        }
         public static List<Ability> get_ability (string location) {
             var store = new DataStore (location);
 

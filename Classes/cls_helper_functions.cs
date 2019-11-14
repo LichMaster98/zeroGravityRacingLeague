@@ -10,7 +10,7 @@ namespace zgrl.Classes
 
     {
         public static string parseEmote(string s) {
-            string temp = s.Substring(s.IndexOf(":")+1);
+            var temp = s.Substring(s.IndexOf(":")+1);
             return ":" + temp.Substring(0,temp.IndexOf(":")+1);
         }
 
@@ -34,8 +34,8 @@ namespace zgrl.Classes
         }
 
         public static string center(string s, int i) {
-            string spaces = "";
-            int toCenter = i - s.Length;
+            var spaces = "";
+            var toCenter = i - s.Length;
             for(int j = 0; j < toCenter/2; j++) {
                 spaces += " ";
             }
@@ -47,8 +47,8 @@ namespace zgrl.Classes
         }
 
         public static Dictionary<string, string> parseInputs(string[] inputs) {
-            Dictionary<string, string> rtrnr = new Dictionary<string, string>();
-            string previous_key = "";
+            var rtrnr = new Dictionary<string, string>();
+            var previous_key = "";
             foreach (string input in inputs) {
                 if (input.Contains("=")) { // This should handle an input of "... name=John Smith img=..."
                     var values = input.Split("=");
@@ -64,7 +64,12 @@ namespace zgrl.Classes
                     previous_key = values[0];
                 } else {
                     var value = rtrnr[previous_key];
-                    value = value + " " + input;
+                    if (input.StartsWith("\\n")) {
+                        // This is a hacky solution
+                        value += System.Environment.NewLine + input.Substring(2);
+                    } else {
+                        value += " " + input;
+                    }
                     rtrnr[previous_key] = value;
                 }
                 
@@ -75,10 +80,10 @@ namespace zgrl.Classes
         
         //Shuffle a deck of cards
         public static Stack<Card> shuffleDeck(List<Card> c) {
-            Stack<Card> s = new Stack<Card>();
+            var s = new Stack<Card>();
 
             while (c.Count > 0) {
-                int num = zgrl.Program.rand.Next(0,c.Count);
+                var num = zgrl.Program.rand.Next(0,c.Count);
                 s.Push(c[num]);
                 c.RemoveAt(num);
             }
@@ -95,8 +100,8 @@ namespace zgrl.Classes
           * @todo        FIX ALL THESE FUNCTIONS TO CONFORM WITH DISCORD POST SETTINGS. THESE FUNCTIONS SHOULD SELF-CORRECT ANY NON-CONFORMING POSTS!!!
           */
         public static void output(ISocketMessageChannel channel, List<string> str, string seperator = "\n") {
-            int count = 0;
-            string output_string = "";
+            var count = 0;
+            var output_string = "";
             if (str.Count == 0) return; 
             foreach(string s in str) {
                 count += s.Length + seperator.Length;
@@ -112,8 +117,8 @@ namespace zgrl.Classes
             channel.SendMessageAsync(output_string).GetAwaiter().GetResult();
         }
         public static void output(IUser User, List<string> str) {
-            int count = 0;
-            string output_string = "";
+            var count = 0;
+            var output_string = "";
             if (str.Count == 0) return; 
             foreach(string s in str) {
                 count += s.Length + 1;
@@ -131,14 +136,14 @@ namespace zgrl.Classes
         public static void output(IUser User, string str) {
             if (str.Length == 0) return;
             if (str.Length > 2000) {
-                int split = 0;
+                var split = 0;
                 for(int i = 2000; i > 0; i--) {
                     if(str[i] == ' ') {
                         split = i;
                         break;
                     }
                 }
-                string output = str.Remove(split);
+                var output = str.Remove(split);
                 helpers.output(User, output);
                 str = str.Remove(0,split);
                 helpers.output(User,str);
@@ -150,14 +155,14 @@ namespace zgrl.Classes
         public static void output(ISocketMessageChannel channel, string str) {
             if (str.Length == 0) return;
             if (str.Length > 2000) {
-                int split = 0;
+                var split = 0;
                 for(int i = 2000; i > 0; i--) {
                     if(str[i] == ' ') {
                         split = i;
                         break;
                     }
                 }
-                string output = str.Remove(split);
+                var output = str.Remove(split);
                 helpers.output(channel, output);
                 str = str.Remove(0,split);
                 helpers.output(channel,str);
