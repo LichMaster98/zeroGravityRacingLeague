@@ -52,15 +52,14 @@ namespace zgrl.Classes
             foreach (string input in inputs) {
                 if (input.Contains("=")) { // This should handle an input of "... name=John Smith img=..."
                     var values = input.Split("=");
+                    var key = values[0].ToLowerInvariant();
+                    var value = values[1];
                     if (values.Length > 2) {
-                        var value = values[1];
                         for (int i = 2; i < values.Length; i++) {
                             value = value + " " + values[i];
                         }
-                        rtrnr.Add(values[0], value);
-                    } else {
-                        rtrnr.Add(values[0], values[1]);
                     }
+                    rtrnr.Add(key, value);
                     previous_key = values[0];
                 } else {
                     var value = rtrnr[previous_key];

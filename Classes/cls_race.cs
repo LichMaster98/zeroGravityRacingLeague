@@ -6,7 +6,7 @@ using Discord.WebSocket;
 
 namespace zgrl.Classes {
     public class Race {
-        private List<racer> racers = new List<racer>();
+        private List<Racer> racers = new List<Racer>();
         private Track track;
         private bool runningGame = false;
 

@@ -4,6 +4,6 @@ namespace zgrl.Classes
 {
     public static class Serialize
     {
-        public static string ToJson(this racer[] self) => JsonConvert.SerializeObject(self, Converter.Settings);
+        public static string ToJson(this Racer[] self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 }

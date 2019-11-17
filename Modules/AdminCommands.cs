@@ -20,13 +20,13 @@ namespace zgrl.Commands
         await Context.Channel.SendMessageAsync(Context.User.Mention + ", you aren't listed as an authorized user for this server.");
         return;
       }
-      var r = racer.get_racer(i);
+      var r = Racer.get_racer(i);
       if (r == null) {
         await ReplyAsync("No pilot with that ID");
         return;
       }
       r.reset();
-      racer.replace_racer(r);
+      Racer.replace_racer(r);
       await ReplyAsync(r.nameID() + " has been reset");
     }
 
@@ -41,11 +41,11 @@ namespace zgrl.Commands
         await Context.Channel.SendMessageAsync(Context.User.Mention + ", you aren't listed as an authorized user for this server.");
         return;
       }
-      var rcs = racer.get_racer();
+      var rcs = Racer.get_racer();
       rcs.ForEach(e=>{
         if ( e.server_discord_id == Context.Guild.Id ) {
           e.inGame = false;
-          racer.update_racer(e);
+          Racer.update_racer(e);
         }
       });
       await ReplyAsync("All Pilots on this Server Reset");

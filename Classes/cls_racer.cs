@@ -5,7 +5,7 @@ using Discord.Commands;
 using JsonFlatFileDataStore;
 
 namespace zgrl.Classes {
-    public class racer {
+    public class Racer {
         public static string[] validKeys = {"name", "sponsor", "desc", "img", "adapt", "skill", "int"};
         public int ID { get; set; }
         public ulong player_discord_id { get; set; }
@@ -20,9 +20,10 @@ namespace zgrl.Classes {
         public int intel { get; set; } = 1;
         public List<Ability> abilities = new List<Ability>();
         public List<Car> cars = new List<Car>();
+        public Dictionary<int,Dictionary<CardLegality,long>> carToDeckLegalityToDeckID { get; set; } = new Dictionary<int, Dictionary<CardLegality,long>>();
 
         //Variables Used for Game Mechanics:
-        public List<Card> activeHand { get; set; } = new List<Card>();
+        public List<Deck> decks = new List<Deck>();
 
         public Embed embed(int i, SocketCommandContext Context) {
             var embed = new EmbedBuilder();
@@ -136,7 +137,6 @@ namespace zgrl.Classes {
         }
 
         public void reset() {
-            activeHand = new List<Classes.Card>();
             inGame = false;
         }
 
@@ -145,10 +145,10 @@ namespace zgrl.Classes {
         }
 
 
-        public static List<racer> get_racer () {
+        public static List<Racer> get_racer () {
             var store = new DataStore ("racer.json");
 
-            var rtner = store.GetCollection<racer> ().AsQueryable ().ToList();
+            var rtner = store.GetCollection<Racer> ().AsQueryable ().ToList();
 
             store.Dispose();
 
@@ -156,66 +156,66 @@ namespace zgrl.Classes {
             return rtner;
         }
 
-        public static racer get_racer (int id) {
+        public static Racer get_racer (int id) {
             var store = new DataStore ("racer.json");
 
             // Get employee collection
-            var rtner = store.GetCollection<racer> ().AsQueryable ().FirstOrDefault (e => e.ID == id);
+            var rtner = store.GetCollection<Racer> ().AsQueryable ().FirstOrDefault (e => e.ID == id);
             store.Dispose();
 
             // Get employee collection
             return rtner;
         }
 
-        public static racer get_racer (string name) {
+        public static Racer get_racer (string name) {
             var store = new DataStore ("racer.json");
 
             // Get employee collection
-            var rtner = store.GetCollection<racer> ().AsQueryable ().FirstOrDefault (e => e.name == name);
+            var rtner = store.GetCollection<Racer> ().AsQueryable ().FirstOrDefault (e => e.name == name);
             store.Dispose();
 
             // Get employee collection
             return rtner;
         }
 
-        public static racer get_racer (ulong player_id, ulong server_id) {
+        public static Racer get_racer (ulong player_id, ulong server_id) {
             var store = new DataStore ("racer.json");
 
             // Get employee collection
-            var rtner = store.GetCollection<racer> ().AsQueryable ().FirstOrDefault (e => e.player_discord_id == player_id && e.server_discord_id == server_id);
+            var rtner = store.GetCollection<Racer> ().AsQueryable ().FirstOrDefault (e => e.player_discord_id == player_id && e.server_discord_id == server_id);
             store.Dispose();
 
             // Get employee collection
             return rtner;
         }
 
-        public static void insert_racer (racer racer) {
+        public static void insert_racer (Racer racer) {
             var store = new DataStore ("racer.json");
 
             // Get employee collection
-            store.GetCollection<racer> ().InsertOneAsync (racer);
+            store.GetCollection<Racer> ().InsertOneAsync (racer);
 
             store.Dispose();
         }
 
-        public static void update_racer (racer racer) {
+        public static void update_racer (Racer racer) {
             var store = new DataStore ("racer.json");
 
-            store.GetCollection<racer> ().ReplaceOne (e => e.ID == racer.ID, racer);
+            store.GetCollection<Racer> ().ReplaceOne (e => e.ID == racer.ID, racer);
             store.Dispose();
         }
 
-        public static void replace_racer(racer racer) {
+        public static void replace_racer(Racer racer) {
             var store = new DataStore ("racer.json");
 
-            store.GetCollection<racer> ().ReplaceOne (e => e.ID == racer.ID, racer);
+            store.GetCollection<Racer> ().ReplaceOne (e => e.ID == racer.ID, racer);
             store.Dispose();
         }
 
-        public static void delete_racer (racer racer) {
+        public static void delete_racer (Racer racer) {
             var store = new DataStore ("racer.json");
 
-            store.GetCollection<racer> ().DeleteOne (e => e.ID == racer.ID);
+            store.GetCollection<Racer> ().DeleteOne (e => e.ID == racer.ID);
             store.Dispose();
         }
 

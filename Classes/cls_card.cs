@@ -2,26 +2,136 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonFlatFileDataStore;
 using Newtonsoft.Json;
-using Discord.Commands;
 using Discord;
 
-public enum CardLegality {
-    BLUE = 0,
-    YELLOW = 1,
-    RED = 2,
-    INVALID = 3
-}
-
-public enum CardType {
-    Utility = 0,
-    Defensive = 1,
-    Offensive = 2,
-    TechAttack = 3,
-    DefensiveOffensive = 4,
-    INVALID = 5
-}
-
 namespace zgrl.Classes {
+    public enum CardLegality {
+        BLUE = 0,
+        YELLOW = 1,
+        RED = 2,
+        INVALID = 3
+    }
+
+    public enum CardType {
+        Utility = 0,
+        Defensive = 1,
+        Offensive = 2,
+        TechAttack = 3,
+        DefensiveOffensive = 4,
+        INVALID = 5
+    }
+
+    public enum CardConditionOptions {
+        Adaptability,
+        Skill,
+        Intelligence,
+        Agility,
+        Armor,
+        Attack,
+        Damage,
+        Health,
+        Hull,
+        Speed,
+        Tech,
+        INVALID
+    }
+
+    public class CardCondition {
+        public CardConditionOptions cardCondition { get; set;}
+        public int value { get; set;}
+
+        public bool check (Car car, Racer racer) {
+            switch (cardCondition) {
+                case CardConditionOptions.Adaptability:
+                return racer.adaptability >= value;
+                case CardConditionOptions.Agility:
+                return car.Agility >= value;
+                case CardConditionOptions.Armor:
+                return car.Armor >= value;
+                case CardConditionOptions.Attack:
+                return car.Attack >= value;
+                case CardConditionOptions.Damage:
+                return car.Damage >= value;
+                case CardConditionOptions.Health:
+                return car.Health >= value;
+                case CardConditionOptions.Hull:
+                return car.Hull >= value;
+                case CardConditionOptions.Intelligence:
+                return racer.intel >= value;
+                case CardConditionOptions.Skill:
+                return racer.skill >= value;
+                case CardConditionOptions.Speed:
+                return car.Speed >= value;
+                case CardConditionOptions.Tech:
+                return car.Tech >= value;
+                default:
+                return false;
+            }
+        }
+
+        public CardCondition(CardConditionOptions option, int val) {
+            cardCondition = option;
+            value=val;
+        }
+
+        public static string cardConditionString(CardConditionOptions cardCondition) {
+            switch(cardCondition) {
+                case CardConditionOptions.Adaptability:
+                    return "Adaptability";
+                case CardConditionOptions.Skill:
+                    return "Skill";
+                case CardConditionOptions.Intelligence:
+                    return "Intelligence";
+                case CardConditionOptions.Agility:
+                    return "Agility";
+                case CardConditionOptions.Armor:
+                    return "Armor";
+                case CardConditionOptions.Attack:
+                    return "Attack";
+                case CardConditionOptions.Damage:
+                    return "Damage";
+                case CardConditionOptions.Health:
+                    return "Health";
+                case CardConditionOptions.Hull:
+                    return "Hull";
+                case CardConditionOptions.Speed:
+                    return "Speed";
+                case CardConditionOptions.Tech:
+                    return "Tech";
+                default:
+                    return "INVALID";
+            }
+        }
+
+        public static CardConditionOptions stringToCardCondition(string input) {
+            switch(input.ToLowerInvariant()) {
+                case "adaptability":
+                    return CardConditionOptions.Adaptability;
+                case "skill":
+                    return CardConditionOptions.Skill;
+                case "intelligence":
+                    return CardConditionOptions.Intelligence;
+                case "agility":
+                    return CardConditionOptions.Agility;
+                case "armor":
+                    return CardConditionOptions.Armor;
+                case "attack":
+                    return CardConditionOptions.Attack;
+                case "damage":
+                    return CardConditionOptions.Damage;
+                case "health":
+                    return CardConditionOptions.Health;
+                case "hull":
+                    return CardConditionOptions.Hull;
+                case "speed":
+                    return CardConditionOptions.Speed;
+                case "tech":
+                    return CardConditionOptions.Tech;
+                default:
+                    return CardConditionOptions.INVALID;
+            }
+        }
+    }
 
     public partial class Card {
         [JsonProperty ("ID")]
@@ -51,6 +161,8 @@ namespace zgrl.Classes {
         public CardLegality cardLegality { get; set; } = CardLegality.INVALID;
         [JsonProperty("cardType")]
         public CardType cardType { get; set; } = CardType.INVALID;
+        [JsonProperty("conditions")]
+        public List<CardCondition> conditions { get; set; } = new List<CardCondition>();
 
         public Embed embed() {
             var embed = new EmbedBuilder();
@@ -113,9 +225,9 @@ namespace zgrl.Classes {
 
         public bool updateNewCard(Dictionary<string, string> inputs, out string error) {
             error = "";
-            foreach (string token in validNewCardKeys) {
-                if (inputs.ContainsKey(token)) {
-                    switch(token) {
+            foreach (string token in inputs.Keys) {
+                if (validNewCardKeys.Contains(token.ToLowerInvariant())) {
+                    switch(token.ToLowerInvariant()) {
                         case "title":
                             title = inputs[token];
                         break;
@@ -146,19 +258,44 @@ namespace zgrl.Classes {
                             }
                         break;
                         default:
-                            error = error + System.Environment.NewLine + "Unrecognized Key: " + token + " Value: " + inputs[token];
+                            var condition = CardCondition.stringToCardCondition(token.ToLowerInvariant());
+                            if (condition != CardConditionOptions.INVALID) {
+                                if (int.TryParse(inputs[token], out int value)) {
+                                    conditions.Add(new CardCondition(condition, value));
+                                } else {
+                                    error = "Card condition (" + condition + ") had no valid value assigned.";
+                                    return false;
+                                }
+                            } else {
+                                error = error + System.Environment.NewLine + "Unrecognized Key: " + token + " Value: " + inputs[token];
+                            }
                         break;
                     }
                 }
             }
             return true;
         }
+
     }
     public partial class Card
     {
         public static string[] validUpdateCardKeys = {"lore", "title", "img"};
         public static string[] validNewCardKeys = {"title", "description", "lore", "success", "failure", "legality", "type"};
         public static Card[] FromJson(string json) => JsonConvert.DeserializeObject<Card[]>(json, Converter.Settings);
+
+        public static List<CardLegality> CardLegalities = new List<CardLegality>() {
+            CardLegality.BLUE,
+            CardLegality.YELLOW,
+            CardLegality.RED
+        };
+
+        public static List<CardType> CardTypes = new List<CardType>() {
+            CardType.Defensive,
+            CardType.Offensive,
+            CardType.DefensiveOffensive,
+            CardType.TechAttack,
+            CardType.Utility
+        };
 
         public static string cardLegalityString(CardLegality cardLegality) {
             switch (cardLegality) {
@@ -172,7 +309,6 @@ namespace zgrl.Classes {
                     return "INVALID";
             }
         }
-
 
         public static CardLegality stringToCardLegality(string input) {
             switch(input.ToLowerInvariant()) {
@@ -229,11 +365,11 @@ namespace zgrl.Classes {
             }
         }
 
-        private string embedTitle() {
+        public string embedTitle() {
             if (customTitle is null) {
-                return "**" + title + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "*";
+                return "ID: " + ID + ": **" + title + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "*";
             } else {
-                return "**" + customTitle + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "*";
+                return "ID: " + ID +": **" + customTitle + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "*";
             }
         }
 

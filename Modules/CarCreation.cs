@@ -10,7 +10,7 @@ namespace zgrl.Commands
   {
     [Command("createcar")]
     public async Task createCarAsync(params string[] inputs) {
-      var r = racer.get_racer(Context.Message.Author.Id, Context.Guild.Id);
+      var r = Racer.get_racer(Context.Message.Author.Id, Context.Guild.Id);
 
       if(r == null) {
         await ReplyAsync("No pilot found for you, you can't create a car without a pilot. Use `zg!createpilot` to make one");
@@ -42,14 +42,14 @@ namespace zgrl.Commands
       var car_saved = Car.get_Car(Context.Message.Author.Id, Context.Guild.Id, id);
 
       r.cars.Add(car_saved);
-      racer.update_racer(r);
+      Racer.update_racer(r);
 
       await ReplyAsync(Context.User.Mention + ", you've created your car. Use `zg!car " + car_saved.ID + "` to see your completed car.");
     }
 
     [Command("updatecar")]
     public async Task updateCarAsync(params string[] inputs) {
-      var r = racer.get_racer(Context.Message.Author.Id, Context.Guild.Id);
+      var r = Racer.get_racer(Context.Message.Author.Id, Context.Guild.Id);
 
       if(r == null) {
         await ReplyAsync("No pilot found for you, you can't update a car without a pilot. Use `zg!createpilot` to make one");
@@ -71,7 +71,7 @@ namespace zgrl.Commands
           return;
         }
         r.cars[Id] = car;
-        racer.update_racer(r);
+        Racer.update_racer(r);
         Car.replace_Car(car);
 
         await ReplyAsync(Context.User.Mention + ", you've updated a car. Use `zg!car " + car.ID +"` to see your completed car.");
@@ -85,7 +85,7 @@ namespace zgrl.Commands
 
     [Command("removeCar")]
     public async Task removeCarAsync(int i) {
-      var r = racer.get_racer(Context.Message.Author.Id, Context.Guild.Id);
+      var r = Racer.get_racer(Context.Message.Author.Id, Context.Guild.Id);
 
       if(r == null) {
         await ReplyAsync("No pilot found for you, you can't remove a car without a pilot. Use `zg!createpilot` to make one");
@@ -101,7 +101,7 @@ namespace zgrl.Commands
 
       r.cars.RemoveAt(i);
       Car.delete_Car(car);
-      racer.update_racer(r);
+      Racer.update_racer(r);
 
       await ReplyAsync(Context.User.Mention + ", successfully removed " + car.Title);
     }
@@ -110,7 +110,7 @@ namespace zgrl.Commands
     public async Task showCarAsync(int id = -1) {
       List<Car> cars = new List<Car>();
       if (id < 0) {
-        var r = racer.get_racer(Context.Message.Author.Id, Context.Guild.Id);
+        var r = Racer.get_racer(Context.Message.Author.Id, Context.Guild.Id);
         if ( r == null ) {
           await ReplyAsync(Context.User.Mention + ", you don't have a current pilot or this pilot doesn't exist in the database.");
           return;
