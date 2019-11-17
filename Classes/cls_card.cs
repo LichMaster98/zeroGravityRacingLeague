@@ -40,6 +40,10 @@ namespace zgrl.Classes {
         public CardConditionOptions cardCondition { get; set;}
         public int value { get; set;}
 
+        public override string ToString() {
+            return value + " " + CardCondition.cardConditionString(cardCondition);
+        }
+
         public bool check (Car car, Racer racer) {
             switch (cardCondition) {
                 case CardConditionOptions.Adaptability:
@@ -185,6 +189,13 @@ namespace zgrl.Classes {
                     embed.WithColor(Color.Gold);
                 break;
             }
+            if (conditions.Count > 0) {
+                var strs = new List<string>();
+                foreach (var condition in conditions) {
+                    strs.Add(condition.ToString());
+                }
+                embed.AddField("Conditions", string.Join(System.Environment.NewLine, strs));
+            }
 
             return embed.Build();
         }
@@ -196,6 +207,13 @@ namespace zgrl.Classes {
             }
             if (!failure.Equals("")) {
                 rtrner += System.Environment.NewLine + "**Failure:**" + System.Environment.NewLine + failure;
+            }
+            if (conditions.Count > 0) {
+                var strs = new List<string>();
+                foreach (var condition in conditions) {
+                    strs.Add(condition.ToString());
+                }
+                rtrner += System.Environment.NewLine + "**Conditions:**" + System.Environment.NewLine + string.Join(System.Environment.NewLine, strs);
             }
             return rtrner;
         }
