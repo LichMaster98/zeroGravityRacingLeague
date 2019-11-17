@@ -7,9 +7,10 @@ using Discord;
 namespace zgrl.Classes {
     public enum CardLegality {
         BLUE = 0,
-        YELLOW = 1,
-        RED = 2,
-        INVALID = 3
+        GREEN = 1,
+        YELLOW = 2,
+        RED = 3,
+        INVALID = 4
     }
 
     public enum CardType {
@@ -147,6 +148,10 @@ namespace zgrl.Classes {
         public string title { get; set; } = "";
         [JsonProperty("customtitle")]
         public string customTitle { get; set; }
+        [JsonProperty("acronym")]
+        public string acronym { get; set;}
+        [JsonProperty("customAcronym")]
+        public string customAcronym { get; set;}
 
         [JsonProperty ("description")] 
         public string description { get; set; } = "";
@@ -188,6 +193,9 @@ namespace zgrl.Classes {
                 case CardLegality.YELLOW:
                     embed.WithColor(Color.Gold);
                 break;
+                case CardLegality.GREEN:
+                    embed.WithColor(Color.Green);
+                break;
             }
             if (conditions.Count > 0) {
                 var strs = new List<string>();
@@ -220,9 +228,9 @@ namespace zgrl.Classes {
 
         public bool update(Dictionary<string, string> inputs, out string error) {
             error = "";
-            foreach (string token in validUpdateCardKeys) {
-                if (inputs.ContainsKey(token)) {
-                    switch(token) {
+            foreach (string token in inputs.Keys) {
+                if (validUpdateCardKeys.Contains(token.ToLowerInvariant())) {
+                    switch(token.ToLowerInvariant()) {
                         case "title":
                             customTitle = inputs[token];
                         break;
@@ -232,9 +240,24 @@ namespace zgrl.Classes {
                         case "img":
                             img = inputs[token];
                         break;
+                        case "acronym":
+                            customAcronym = inputs[token];
+                        break;
                         default:
                             error = error + System.Environment.NewLine + "Unrecognized Key: " + token + " Value: " + inputs[token];
                         break;
+                    }
+                } else {
+                    var condition = CardCondition.stringToCardCondition(token.ToLowerInvariant());
+                    if (condition != CardConditionOptions.INVALID) {
+                        if (int.TryParse(inputs[token], out int value)) {
+                            conditions.Add(new CardCondition(condition, value));
+                        } else {
+                            error = "Card condition (" + condition + ") had no valid value assigned.";
+                            return false;
+                        }
+                    } else {
+                        error = error + System.Environment.NewLine + "Unrecognized Key: " + token + " Value: " + inputs[token];
                     }
                 }
             }
@@ -275,19 +298,21 @@ namespace zgrl.Classes {
                                 return false;
                             }
                         break;
-                        default:
-                            var condition = CardCondition.stringToCardCondition(token.ToLowerInvariant());
-                            if (condition != CardConditionOptions.INVALID) {
-                                if (int.TryParse(inputs[token], out int value)) {
-                                    conditions.Add(new CardCondition(condition, value));
-                                } else {
-                                    error = "Card condition (" + condition + ") had no valid value assigned.";
-                                    return false;
-                                }
-                            } else {
-                                error = error + System.Environment.NewLine + "Unrecognized Key: " + token + " Value: " + inputs[token];
-                            }
+                        case "acronym":
+                            acronym = inputs[token];
                         break;
+                    }
+                } else {
+                    var condition = CardCondition.stringToCardCondition(token.ToLowerInvariant());
+                    if (condition != CardConditionOptions.INVALID) {
+                        if (int.TryParse(inputs[token], out int value)) {
+                            conditions.Add(new CardCondition(condition, value));
+                        } else {
+                            error = "Card condition (" + condition + ") had no valid value assigned.";
+                            return false;
+                        }
+                    } else {
+                        error = error + System.Environment.NewLine + "Unrecognized Key: " + token + " Value: " + inputs[token];
                     }
                 }
             }
@@ -297,14 +322,15 @@ namespace zgrl.Classes {
     }
     public partial class Card
     {
-        public static string[] validUpdateCardKeys = {"lore", "title", "img"};
-        public static string[] validNewCardKeys = {"title", "description", "lore", "success", "failure", "legality", "type"};
+        public static string[] validUpdateCardKeys = {"lore", "title", "img", "acronym"};
+        public static string[] validNewCardKeys = {"title", "description", "lore", "success", "failure", "legality", "type", "acronym"};
         public static Card[] FromJson(string json) => JsonConvert.DeserializeObject<Card[]>(json, Converter.Settings);
 
         public static List<CardLegality> CardLegalities = new List<CardLegality>() {
             CardLegality.BLUE,
             CardLegality.YELLOW,
-            CardLegality.RED
+            CardLegality.RED,
+            CardLegality.GREEN
         };
 
         public static List<CardType> CardTypes = new List<CardType>() {
@@ -323,6 +349,8 @@ namespace zgrl.Classes {
                     return "Yellow";
                 case CardLegality.RED:
                     return "Red";
+                case CardLegality.GREEN:
+                    return "Green";
                 default:
                     return "INVALID";
             }
@@ -336,6 +364,8 @@ namespace zgrl.Classes {
                     return CardLegality.RED;
                 case "yellow":
                     return CardLegality.YELLOW;
+                case "green":
+                    return CardLegality.GREEN;
                 default:
                     return CardLegality.INVALID;
             }
@@ -376,7 +406,11 @@ namespace zgrl.Classes {
         }
 
         public override string ToString() {
-            if (customTitle is null) {
+            if (customAcronym != null) {
+                return "**" + customAcronym + "**(Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "* Description: " + description;
+            } else if (acronym != null) {
+                return "**" + acronym + "**(Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "* Description: " + description;
+            } else if (customTitle is null) {
                 return "**" + title + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "* Description: " + description;               
             } else {
                 return "**" + customTitle + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "* Description: " + description; 
@@ -385,9 +419,9 @@ namespace zgrl.Classes {
 
         public string embedTitle() {
             if (customTitle is null) {
-                return "ID: " + ID + ": **" + title + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "*";
+                return "ID " + ID + ": **" + title + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "*";
             } else {
-                return "ID: " + ID +": **" + customTitle + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "*";
+                return "ID " + ID +": **" + customTitle + "** (Legality: " + Card.cardLegalityString(cardLegality) + ") *Type: " + Card.cardTypeString(cardType) + "*";
             }
         }
 

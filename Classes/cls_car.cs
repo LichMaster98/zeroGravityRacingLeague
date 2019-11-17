@@ -13,7 +13,7 @@ namespace zgrl.Classes
     [JsonProperty("title")]
     public string Title { get; set; }
     [JsonProperty("description")]
-    public string description { get; set; }
+    public string description { get; set; } = "No Description";
     [JsonProperty("img")]
     public string img {get; set;}
     [JsonProperty("player_id")]

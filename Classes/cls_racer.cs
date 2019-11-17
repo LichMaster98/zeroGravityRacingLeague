@@ -12,7 +12,7 @@ namespace zgrl.Classes {
         public ulong server_discord_id { get ; set; }
         public string name { get; set; } = "";
         public string faction { get; set; } = "";
-        public string descr { get; set; } = "";
+        public string descr { get; set; } = "No Description";
         public string img { get; set; } = "";
         public bool inGame { get; set; } = false;
         public int adaptability { get; set; } = 1;

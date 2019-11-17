@@ -5,13 +5,173 @@
       "count": 1,
       "title": "Overdrive",
       "customtitle": null,
-      "description": "**Requirements:** 2 skill\r\nWhether through maneuvering your opponents, abusing the power output of your engine, or using track limits to your advantage; you attempt to dart past your opponents. Test Speed vs AGI against all cars ahead of you and within 3+Speed units. This action is nullified if it resolves and there are no targets in range or any of them are taking the Block action.",
+      "acronym": null,
+      "customAcronym": null,
+      "description": "Whether through maneuvering your opponents, abusing the power output of your engine, or using track limits to your advantage; you attempt to dart past your opponents. Test Speed vs AGI against all cars ahead of you and within 3+Speed units. This action is nullified if it resolves and there are no targets in range or any of them are taking the Block action.",
       "customLore": null,
       "img": "",
       "success": "Your car moves in front of all cars tested against and they cannot progress past you this round.",
       "failure": "",
       "cardLegality": 0,
-      "cardType": 0
+      "cardType": 0,
+      "conditions": [
+        {
+          "cardCondition": 1,
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "count": 1,
+      "title": "Block",
+      "customtitle": null,
+      "acronym": null,
+      "customAcronym": null,
+      "description": "You weave across the field to obscure the racing line, or otherwise use your car’s position on the track to make it hard for people to pass you. Test AGI vs AGI against any and all cars that would pass you based on their progress.",
+      "customLore": null,
+      "img": "",
+      "success": "Any car you succeed against has their progress this round halted at 1 unit behind your car.",
+      "failure": "Failure against any cars behind you means that this action is invalidated.",
+      "cardLegality": 0,
+      "cardType": 1,
+      "conditions": []
+    },
+    {
+      "id": 2,
+      "count": 1,
+      "title": "Trail",
+      "customtitle": null,
+      "acronym": null,
+      "customAcronym": null,
+      "description": "You duck into the wake of the cars in front of you in order to gain a boost in speed.\r\n**Effect:** Depending on your range from the car ahead of you, you gain one of the following bonuses. These benefits last for 2 rounds after this card is used. The latest use of Trail overrides any previous uses.\r\n* 10+ Units: +1 speed\r\n* 9-5 Units: +2 speed\r\n* 4-2 Units: +3 speed\r\n* 1 Unit: +4 speed",
+      "customLore": null,
+      "img": "",
+      "success": "",
+      "failure": "",
+      "cardLegality": 0,
+      "cardType": 0,
+      "conditions": []
+    },
+    {
+      "id": 3,
+      "count": 1,
+      "title": "Ram",
+      "customtitle": null,
+      "acronym": null,
+      "customAcronym": null,
+      "description": "You slam your car into the one ahead of or alongside you. If you are within 1 unit of the car ahead of or behind you, you may hit them with your car. Test Hull vs Agility.",
+      "customLore": null,
+      "img": "",
+      "success": "You take 2 damage, the opponent takes 3,and the opponent’s progress is halved this round.",
+      "failure": "Take a -2 to your speed this round, you automatically fail any checks made to pass you.",
+      "cardLegality": 3,
+      "cardType": 2,
+      "conditions": []
+    },
+    {
+      "id": 4,
+      "count": 1,
+      "title": "Blast",
+      "customtitle": null,
+      "acronym": null,
+      "customAcronym": null,
+      "description": "You fire a low power weapon at your opponent in hopes of damaging them. Roll ATK vs AGI against one car ahead of you and within 15 units.",
+      "customLore": null,
+      "img": "",
+      "success": "You deal 1d4+ATK damage to the opponent",
+      "failure": "",
+      "cardLegality": 2,
+      "cardType": 2,
+      "conditions": []
+    },
+    {
+      "id": 5,
+      "count": 1,
+      "title": "Induced Essential Systems Failure IESF",
+      "customtitle": null,
+      "acronym": null,
+      "customAcronym": null,
+      "description": "You launch a cyberattack against a target within range, focussing on the computerized systems that stabilize their vehicle. Roll Tech vs Tech against someone in sensor range.",
+      "customLore": null,
+      "img": "",
+      "success": "Next round the target’s adaptability is reduced by 1. Additionally, the track is considered as +5% nav difficulty for that target until they complete a cleanse action.",
+      "failure": "",
+      "cardLegality": 3,
+      "cardType": 2,
+      "conditions": [
+        {
+          "cardCondition": 2,
+          "value": 3
+        },
+        {
+          "cardCondition": 10,
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "count": 1,
+      "title": "Cleanse",
+      "customtitle": null,
+      "acronym": null,
+      "customAcronym": null,
+      "description": "You set about using the computational power of your vehicle to repair systems and undo the negative effects on your vehicle.",
+      "customLore": null,
+      "img": "",
+      "success": "Rid yourself of any negative afflictions your ship may be subject to due to tech attacks.",
+      "failure": "",
+      "cardLegality": 0,
+      "cardType": 1,
+      "conditions": [
+        {
+          "cardCondition": 10,
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "count": 1,
+      "title": "Flare",
+      "customtitle": null,
+      "acronym": null,
+      "customAcronym": null,
+      "description": "You launch flares from your vehicle, in an attempt to throw off seeking payloads. During this turn you cannot be targeted or affected by Tech vs Agility attacks.",
+      "customLore": null,
+      "img": "",
+      "success": "",
+      "failure": "",
+      "cardLegality": 3,
+      "cardType": 1,
+      "conditions": [
+        {
+          "cardCondition": 5,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "count": 1,
+      "title": "Polyspectral Data Flare",
+      "customtitle": null,
+      "acronym": null,
+      "customAcronym": null,
+      "description": "You use the power of your sensor and broadcasting suite to jam nearby computing systems and hedge out inbound signals. You are considered Immune to tech attacks this round. Make a Tech vs Tech attack against any and everyone within 6 position points of you.",
+      "customLore": null,
+      "img": "",
+      "success": "Additionally, the nav difficulty of all cars which fail increases by an amount of percentage points equal to the tech stat of your car until they are cleansed.",
+      "failure": "",
+      "cardLegality": 3,
+      "cardType": 4,
+      "conditions": [
+        {
+          "cardCondition": 10,
+          "value": 6
+        }
+      ]
     }
   ]
 }

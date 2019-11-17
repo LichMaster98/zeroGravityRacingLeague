@@ -67,8 +67,8 @@ namespace zgrl.Classes
           case CardLegality.RED:
             embed.WithColor(Color.Red);
           break;
-          case CardLegality.YELLOW:
-            embed.WithColor(Color.Gold);
+          case CardLegality.GREEN:
+            embed.WithColor(Color.Green);
           break;
         }
         foreach (var type in Card.CardTypes) {
@@ -83,7 +83,9 @@ namespace zgrl.Classes
             }
           }
         }
-        embed.AddField("Card Count:", cards.Count().ToString());
+        var car = Car.get_Car(carMapped);
+        embed.AddField("For Car", "ID " + car.ID + ": " + car.Title, true);
+        embed.AddField("Card Count:", countCards().ToString());
 
         return embed.Build();
       }
@@ -94,8 +96,19 @@ namespace zgrl.Classes
             return false;
           }
         }
+        if (card.cardLegality <= cardLegality) {
+          return false;
+        }
         cards.Add(card);
         return true;
+      }
+
+      public int countCards() {
+        var count = 0;
+        foreach (var card in cards) {
+          count += card.count;
+        }
+        return count;
       }
 
     }
@@ -103,10 +116,7 @@ namespace zgrl.Classes
   public partial class Deck
   {
     private static bool verifyComplete(Deck deck) {
-      var count = 0;
-      foreach (var card in deck.cards) {
-        count += card.count;
-      }
+      var count = deck.countCards();
       return count == 20;
     }
 
@@ -130,6 +140,10 @@ namespace zgrl.Classes
 
       if (inputs.ContainsKey("legality")) {
         legality = Card.stringToCardLegality(inputs["legality"]);
+        if (legality == CardLegality.YELLOW) {
+          error = "A deck can not be of legality yellow.";
+          return false;
+        }
         inputs.Remove("legality");
       } else {
         error = "Required key `legality` not found";

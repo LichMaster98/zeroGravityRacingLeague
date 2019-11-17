@@ -114,6 +114,35 @@ namespace zgrl.Commands
       }
     }
 
+    [Command("customizecard")]
+    public async Task customizeCardAsync(params string[] inputs) {
+      var string_to_value = helpers.parseInputs(inputs);
+      if (!string_to_value.ContainsKey("id")) {
+        await ReplyAsync(Context.User.Mention + ", you didn't specify the card ID to update.");
+        return;
+      }
+      int id;
+      if(!int.TryParse(string_to_value["id"], out id) || id < 0) {
+        await ReplyAsync(Context.User.Mention + ", you didn't provide a valid number for ID.");
+        return;
+      }
+
+      var c = Card.get_card("card.json", id);
+      if (c == null) {
+        await ReplyAsync(Context.User.Mention + ", this card id (" + id + ") doesn't exist in the database.");
+        return;
+      }
+
+      string_to_value.Remove("id");
+      if (!c.updateNewCard(string_to_value, out string error)) {
+        await ReplyAsync(Context.User.Mention + ", this card was unable to be updated with error: " + error);
+        return;
+      } else {
+        Card.update_card("card.json", c);
+        await ReplyAsync(Context.User.Mention + ", updated a card. **WARNING** - Mechanical implementation in code of this card has not changed." + error, false, c.embed());
+      }
+    }
+
     [Command("removeAuthorized")]
     public async Task removeAuthorizedAsync(IGuildUser User) {
       var s = Server.get_Server(Context.Guild.Id);
